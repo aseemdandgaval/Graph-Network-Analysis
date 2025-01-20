@@ -24,7 +24,7 @@ Try out the Streamlit visualizations [here!](https://huggingface.co/spaces/Aseem
 * Use community detection to find clusters of strongly related characters.
 * Calculate graph metrics (e.g., degree, betweenness) to identify the most important characters.
 
-Evolution of Characters over Books
+**Example of Evolution of Characters over Books**
 ![Evo](images/evolution.png)
 
 ## **Repository Structure:**
