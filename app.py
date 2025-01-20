@@ -1,43 +1,48 @@
-import re
-import os
-import nltk
-import json
-import spacy
-import pickle
-import string
-import time
-import logging
-import numpy as np
-import streamlit as st
-import seaborn as sns
-import networkx as nx
 import pandas as pd
-from tqdm import tqdm
-from spacy import displacy
+import streamlit as st
 import plotly.express as px
-from pyvis.network import Network
-import matplotlib.pyplot as plt
-from nltk import word_tokenize
-from nltk.corpus import stopwords 
 import streamlit.components.v1 as components
-import community.community_louvain as community_louvain
 
-from streamlit_utils import character_evolution
+
+def character_evolution(character_list):
+    index = ['Philosopher\'s Stone',
+             'Chamber of Secrets',
+             'Prisoner of Azkaban',
+             'Goblet of Fire',
+             'Order of the Phoenix',
+             'Half-Blood Prince',
+             'Deathly Hallows']
+    
+    df = pd.read_csv('character_evolution.csv')
+    df = df.set_index(pd.Index(index))
+    
+    fig = px.line(df[character_list], markers=True) 
+    fig.update_layout(height=550,
+                      width=1000, 
+                      xaxis_title="",
+                      yaxis_title="Importance",
+                      title={'text': "Evolution of Characters over the Books",
+                             'y': 0.95,
+                             'x': 0.5,
+                             'xanchor': 'center',
+                             'yanchor': 'top'})
+    left, middle, right = st.columns((2, 5, 2))
+    with middle:
+        st.plotly_chart(fig, theme=None, use_container_width=False)
+
 
 def main():
     df = pd.read_csv('character_evolution.csv')
     
-    # Set Title
     st.set_page_config(layout="wide")
     st.title("Relationship Extraction in Harry Potter Books")
     st.write('')
     st.write('')
     
     # Select Type of Analysis
-    tab1, tab2, tab3, tab4 = st.tabs(['Network Graphs',
-                                 '  ',
-                                 'Evolution of Characters',
-                                 '  '])
+    tab1, tab2 = st.tabs(['Network Graphs',
+                          'Evolution of Characters'
+                        ])
     
     # Network Graphs
     with tab1:
@@ -56,28 +61,17 @@ def main():
             left, middle, right = st.columns((1, 5, 1))
             with middle:
                 st.write('') 
-                HtmlFile = open(f'new_graphs/{book}.html', 'r', encoding='utf-8')
-                components.html(HtmlFile.read(), height=750)
-
-                
-    # Compare Network Graphs   
-    # with tab2:
-    #     st.write("tab2")
-        
+                HtmlFile = open(f'graphs/{book}.html', 'r', encoding='utf-8')
+                components.html(HtmlFile.read(), height=1500, width=1000)
 
     # Evolution of Characters
-    with tab3:
+    with tab2:
         st.write('')
         character_list = st.multiselect('Select Characters', list(df.columns)[1:])
         if st.button('Plot'):
             st.write('')
             character_evolution(character_list)
-
-            
-    # Exploratory Data Analysis   
-    # with tab4:
-    #     st.write("tab4")
-
         
+
 if __name__ == '__main__':
     main()

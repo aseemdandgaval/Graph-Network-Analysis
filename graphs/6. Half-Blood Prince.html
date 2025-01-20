@@ -1,0 +1,177 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1></h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1></h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 1500px;
+                 height: 1000px;
+                 background-color: #222222;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+             #config {
+                 float: left;
+                 width: 400px;
+                 height: 600px;
+             }
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+            <div id="config"></div>
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"font": {"color": "white"}, "group": 0, "id": "Bellatrix", "label": "Bellatrix", "shape": "dot", "size": 6}, {"font": {"color": "white"}, "group": 1, "id": "Snape", "label": "Snape", "shape": "dot", "size": 26}, {"font": {"color": "white"}, "group": 2, "id": "Dumbledore", "label": "Dumbledore", "shape": "dot", "size": 40}, {"font": {"color": "white"}, "group": 1, "id": "Sirius", "label": "Sirius", "shape": "dot", "size": 10}, {"font": {"color": "white"}, "group": 0, "id": "Kreacher", "label": "Kreacher", "shape": "dot", "size": 7}, {"font": {"color": "white"}, "group": 0, "id": "Harry", "label": "Harry", "shape": "dot", "size": 68}, {"font": {"color": "white"}, "group": 3, "id": "Hermione", "label": "Hermione", "shape": "dot", "size": 29}, {"font": {"color": "white"}, "group": 1, "id": "Narcissa", "label": "Narcissa", "shape": "dot", "size": 1}, {"font": {"color": "white"}, "group": 2, "id": "Lucius", "label": "Lucius", "shape": "dot", "size": 2}, {"font": {"color": "white"}, "group": 1, "id": "Nymphadora", "label": "Nymphadora", "shape": "dot", "size": 2}, {"font": {"color": "white"}, "group": 2, "id": "Voldemort", "label": "Voldemort", "shape": "dot", "size": 20}, {"font": {"color": "white"}, "group": 4, "id": "Hagrid", "label": "Hagrid", "shape": "dot", "size": 20}, {"font": {"color": "white"}, "group": 3, "id": "Ron", "label": "Ron", "shape": "dot", "size": 39}, {"font": {"color": "white"}, "group": 0, "id": "Malfoy", "label": "Malfoy", "shape": "dot", "size": 21}, {"font": {"color": "white"}, "group": 3, "id": "Dean", "label": "Dean", "shape": "dot", "size": 9}, {"font": {"color": "white"}, "group": 3, "id": "Katie", "label": "Katie", "shape": "dot", "size": 10}, {"font": {"color": "white"}, "group": 4, "id": "Fred", "label": "Fred", "shape": "dot", "size": 10}, {"font": {"color": "white"}, "group": 1, "id": "Goyle", "label": "Goyle", "shape": "dot", "size": 6}, {"font": {"color": "white"}, "group": 3, "id": "Seamus", "label": "Seamus", "shape": "dot", "size": 7}, {"font": {"color": "white"}, "group": 2, "id": "Marvolo", "label": "Marvolo", "shape": "dot", "size": 5}, {"font": {"color": "white"}, "group": 1, "id": "Cho", "label": "Cho", "shape": "dot", "size": 4}, {"font": {"color": "white"}, "group": 4, "id": "Ginny", "label": "Ginny", "shape": "dot", "size": 18}, {"font": {"color": "white"}, "group": 1, "id": "Amycus", "label": "Amycus", "shape": "dot", "size": 4}, {"font": {"color": "white"}, "group": 4, "id": "Fang", "label": "Fang", "shape": "dot", "size": 4}, {"font": {"color": "white"}, "group": 3, "id": "Luna", "label": "Luna", "shape": "dot", "size": 9}, {"font": {"color": "white"}, "group": 2, "id": "James", "label": "James", "shape": "dot", "size": 4}, {"font": {"color": "white"}, "group": 1, "id": "Bill", "label": "Bill", "shape": "dot", "size": 14}, {"font": {"color": "white"}, "group": 3, "id": "Neville", "label": "Neville", "shape": "dot", "size": 17}, {"font": {"color": "white"}, "group": 0, "id": "Petunia", "label": "Petunia", "shape": "dot", "size": 3}, {"font": {"color": "white"}, "group": 0, "id": "Dudley", "label": "Dudley", "shape": "dot", "size": 4}, {"font": {"color": "white"}, "group": 4, "id": "Buckbeak", "label": "Buckbeak", "shape": "dot", "size": 4}, {"font": {"color": "white"}, "group": 3, "id": "Hedwig", "label": "Hedwig", "shape": "dot", "size": 4}, {"font": {"color": "white"}, "group": 1, "id": "Madam", "label": "Madam", "shape": "dot", "size": 4}, {"font": {"color": "white"}, "group": 2, "id": "Horace", "label": "Horace", "shape": "dot", "size": 3}, {"font": {"color": "white"}, "group": 2, "id": "Albus", "label": "Albus", "shape": "dot", "size": 2}, {"font": {"color": "white"}, "group": 2, "id": "Arthur", "label": "Arthur", "shape": "dot", "size": 7}, {"font": {"color": "white"}, "group": 2, "id": "Molly", "label": "Molly", "shape": "dot", "size": 3}, {"font": {"color": "white"}, "group": 2, "id": "Fawkes", "label": "Fawkes", "shape": "dot", "size": 2}, {"font": {"color": "white"}, "group": 2, "id": "Bob", "label": "Bob", "shape": "dot", "size": 1}, {"font": {"color": "white"}, "group": 2, "id": "Merope", "label": "Merope", "shape": "dot", "size": 5}, {"font": {"color": "white"}, "group": 2, "id": "Morfin", "label": "Morfin", "shape": "dot", "size": 6}, {"font": {"color": "white"}, "group": 2, "id": "Stan", "label": "Stan", "shape": "dot", "size": 2}, {"font": {"color": "white"}, "group": 4, "id": "Fleur", "label": "Fleur", "shape": "dot", "size": 13}, {"font": {"color": "white"}, "group": 3, "id": "Lavender", "label": "Lavender", "shape": "dot", "size": 5}, {"font": {"color": "white"}, "group": 3, "id": "Firenze", "label": "Firenze", "shape": "dot", "size": 5}, {"font": {"color": "white"}, "group": 2, "id": "Hokey", "label": "Hokey", "shape": "dot", "size": 4}, {"font": {"color": "white"}, "group": 3, "id": "Alecto", "label": "Alecto", "shape": "dot", "size": 3}, {"font": {"color": "white"}, "group": 3, "id": "Fenrir", "label": "Fenrir", "shape": "dot", "size": 3}, {"font": {"color": "white"}, "group": 4, "id": "Gabrielle", "label": "Gabrielle", "shape": "dot", "size": 3}, {"font": {"color": "white"}, "group": 1, "id": "Charlie", "label": "Charlie", "shape": "dot", "size": 3}, {"font": {"color": "white"}, "group": 2, "id": "Lily", "label": "Lily", "shape": "dot", "size": 3}, {"font": {"color": "white"}, "group": 0, "id": "Marietta", "label": "Marietta", "shape": "dot", "size": 2}, {"font": {"color": "white"}, "group": 0, "id": "Blaise", "label": "Blaise", "shape": "dot", "size": 5}, {"font": {"color": "white"}, "group": 0, "id": "Pansy", "label": "Pansy", "shape": "dot", "size": 3}, {"font": {"color": "white"}, "group": 0, "id": "Crabbe", "label": "Crabbe", "shape": "dot", "size": 2}, {"font": {"color": "white"}, "group": 0, "id": "Ernie", "label": "Ernie", "shape": "dot", "size": 4}, {"font": {"color": "white"}, "group": 0, "id": "Nott", "label": "Nott", "shape": "dot", "size": 3}, {"font": {"color": "white"}, "group": 0, "id": "Peverell", "label": "Peverell", "shape": "dot", "size": 1}, {"font": {"color": "white"}, "group": 3, "id": "Hannah", "label": "Hannah", "shape": "dot", "size": 2}, {"font": {"color": "white"}, "group": 3, "id": "Parvati", "label": "Parvati", "shape": "dot", "size": 8}, {"font": {"color": "white"}, "group": 4, "id": "Aragog", "label": "Aragog", "shape": "dot", "size": 4}, {"font": {"color": "white"}, "group": 3, "id": "Mundungus", "label": "Mundungus", "shape": "dot", "size": 2}, {"font": {"color": "white"}, "group": 4, "id": "Zacharias", "label": "Zacharias", "shape": "dot", "size": 2}, {"font": {"color": "white"}, "group": 3, "id": "Romilda", "label": "Romilda", "shape": "dot", "size": 2}, {"font": {"color": "white"}, "group": 3, "id": "Peeves", "label": "Peeves", "shape": "dot", "size": 3}, {"font": {"color": "white"}, "group": 0, "id": "Argus", "label": "Argus", "shape": "dot", "size": 1}, {"font": {"color": "white"}, "group": 4, "id": "Percy", "label": "Percy", "shape": "dot", "size": 6}, {"font": {"color": "white"}, "group": 0, "id": "Barty", "label": "Barty", "shape": "dot", "size": 1}, {"font": {"color": "white"}, "group": 0, "id": "Cornelius", "label": "Cornelius", "shape": "dot", "size": 1}, {"font": {"color": "white"}, "group": 0, "id": "Dobby", "label": "Dobby", "shape": "dot", "size": 5}, {"font": {"color": "white"}, "group": 3, "id": "Myrtle", "label": "Myrtle", "shape": "dot", "size": 2}, {"font": {"color": "white"}, "group": 0, "id": "Bloody", "label": "Bloody", "shape": "dot", "size": 1}, {"font": {"color": "white"}, "group": 0, "id": "Nagini", "label": "Nagini", "shape": "dot", "size": 1}, {"font": {"color": "white"}, "group": 2, "id": "Grawp", "label": "Grawp", "shape": "dot", "size": 4}, {"font": {"color": "white"}, "group": 4, "id": "Remus", "label": "Remus", "shape": "dot", "size": 2}, {"font": {"color": "white"}, "group": 3, "id": "Cormac", "label": "Cormac", "shape": "dot", "size": 2}, {"font": {"color": "white"}, "group": 3, "id": "Trevor", "label": "Trevor", "shape": "dot", "size": 2}, {"font": {"color": "white"}, "group": 3, "id": "Augusta", "label": "Augusta", "shape": "dot", "size": 1}]);
+                  edges = new vis.DataSet([{"from": "Bellatrix", "to": "Snape", "value": 107, "width": 1}, {"from": "Bellatrix", "to": "Dumbledore", "value": 35, "width": 1}, {"from": "Bellatrix", "to": "Sirius", "value": 16, "width": 1}, {"from": "Bellatrix", "to": "Kreacher", "value": 10, "width": 1}, {"from": "Bellatrix", "to": "Harry", "value": 5, "width": 1}, {"from": "Bellatrix", "to": "Hermione", "value": 6, "width": 1}, {"from": "Snape", "to": "Narcissa", "value": 6, "width": 1}, {"from": "Snape", "to": "Dumbledore", "value": 276, "width": 1}, {"from": "Snape", "to": "Lucius", "value": 10, "width": 1}, {"from": "Snape", "to": "Harry", "value": 982, "width": 1}, {"from": "Snape", "to": "Nymphadora", "value": 11, "width": 1}, {"from": "Snape", "to": "Voldemort", "value": 79, "width": 1}, {"from": "Snape", "to": "Hagrid", "value": 16, "width": 1}, {"from": "Snape", "to": "Ron", "value": 148, "width": 1}, {"from": "Snape", "to": "Hermione", "value": 62, "width": 1}, {"from": "Snape", "to": "Malfoy", "value": 238, "width": 1}, {"from": "Snape", "to": "Dean", "value": 6, "width": 1}, {"from": "Snape", "to": "Katie", "value": 2, "width": 1}, {"from": "Snape", "to": "Fred", "value": 3, "width": 1}, {"from": "Snape", "to": "Goyle", "value": 6, "width": 1}, {"from": "Snape", "to": "Seamus", "value": 15, "width": 1}, {"from": "Snape", "to": "Marvolo", "value": 4, "width": 1}, {"from": "Snape", "to": "Sirius", "value": 6, "width": 1}, {"from": "Snape", "to": "Cho", "value": 4, "width": 1}, {"from": "Snape", "to": "Ginny", "value": 5, "width": 1}, {"from": "Snape", "to": "Amycus", "value": 6, "width": 1}, {"from": "Snape", "to": "Fang", "value": 11, "width": 1}, {"from": "Snape", "to": "Luna", "value": 12, "width": 1}, {"from": "Snape", "to": "James", "value": 16, "width": 1}, {"from": "Snape", "to": "Bill", "value": 3, "width": 1}, {"from": "Snape", "to": "Neville", "value": 8, "width": 1}, {"from": "Dumbledore", "to": "Harry", "value": 3249, "width": 1}, {"from": "Dumbledore", "to": "Petunia", "value": 4, "width": 1}, {"from": "Dumbledore", "to": "Dudley", "value": 32, "width": 1}, {"from": "Dumbledore", "to": "Sirius", "value": 49, "width": 1}, {"from": "Dumbledore", "to": "Kreacher", "value": 27, "width": 1}, {"from": "Dumbledore", "to": "Buckbeak", "value": 16, "width": 1}, {"from": "Dumbledore", "to": "Hedwig", "value": 14, "width": 1}, {"from": "Dumbledore", "to": "Voldemort", "value": 396, "width": 1}, {"from": "Dumbledore", "to": "Madam", "value": 21, "width": 1}, {"from": "Dumbledore", "to": "Horace", "value": 34, "width": 1}, {"from": "Dumbledore", "to": "Albus", "value": 28, "width": 1}, {"from": "Dumbledore", "to": "Ron", "value": 174, "width": 1}, {"from": "Dumbledore", "to": "Arthur", "value": 19, "width": 1}, {"from": "Dumbledore", "to": "Molly", "value": 6, "width": 1}, {"from": "Dumbledore", "to": "Hagrid", "value": 53, "width": 1}, {"from": "Dumbledore", "to": "Neville", "value": 4, "width": 1}, {"from": "Dumbledore", "to": "Malfoy", "value": 217, "width": 1}, {"from": "Dumbledore", "to": "Hermione", "value": 79, "width": 1}, {"from": "Dumbledore", "to": "Fawkes", "value": 12, "width": 1}, {"from": "Dumbledore", "to": "Bob", "value": 11, "width": 1}, {"from": "Dumbledore", "to": "Merope", "value": 31, "width": 1}, {"from": "Dumbledore", "to": "Morfin", "value": 38, "width": 1}, {"from": "Dumbledore", "to": "Ginny", "value": 20, "width": 1}, {"from": "Dumbledore", "to": "Katie", "value": 22, "width": 1}, {"from": "Dumbledore", "to": "Marvolo", "value": 7, "width": 1}, {"from": "Dumbledore", "to": "Luna", "value": 3, "width": 1}, {"from": "Dumbledore", "to": "Stan", "value": 6, "width": 1}, {"from": "Dumbledore", "to": "James", "value": 5, "width": 1}, {"from": "Dumbledore", "to": "Fleur", "value": 4, "width": 1}, {"from": "Dumbledore", "to": "Fred", "value": 5, "width": 1}, {"from": "Dumbledore", "to": "Lavender", "value": 4, "width": 1}, {"from": "Dumbledore", "to": "Firenze", "value": 10, "width": 1}, {"from": "Dumbledore", "to": "Hokey", "value": 19, "width": 1}, {"from": "Dumbledore", "to": "Amycus", "value": 25, "width": 1}, {"from": "Dumbledore", "to": "Alecto", "value": 7, "width": 1}, {"from": "Dumbledore", "to": "Fenrir", "value": 6, "width": 1}, {"from": "Dumbledore", "to": "Bill", "value": 10, "width": 1}, {"from": "Dumbledore", "to": "Seamus", "value": 4, "width": 1}, {"from": "Lucius", "to": "Voldemort", "value": 21, "width": 1}, {"from": "Harry", "to": "Hedwig", "value": 24, "width": 1}, {"from": "Harry", "to": "Sirius", "value": 73, "width": 1}, {"from": "Harry", "to": "Petunia", "value": 4, "width": 1}, {"from": "Harry", "to": "Kreacher", "value": 91, "width": 1}, {"from": "Harry", "to": "Buckbeak", "value": 20, "width": 1}, {"from": "Harry", "to": "Hagrid", "value": 487, "width": 1}, {"from": "Harry", "to": "Voldemort", "value": 639, "width": 1}, {"from": "Harry", "to": "Dudley", "value": 14, "width": 1}, {"from": "Harry", "to": "Horace", "value": 48, "width": 1}, {"from": "Harry", "to": "Albus", "value": 12, "width": 1}, {"from": "Harry", "to": "Arthur", "value": 51, "width": 1}, {"from": "Harry", "to": "Fred", "value": 132, "width": 1}, {"from": "Harry", "to": "Ron", "value": 3210, "width": 1}, {"from": "Harry", "to": "Hermione", "value": 833, "width": 1}, {"from": "Harry", "to": "Ginny", "value": 437, "width": 1}, {"from": "Harry", "to": "Gabrielle", "value": 4, "width": 1}, {"from": "Harry", "to": "Fleur", "value": 112, "width": 1}, {"from": "Harry", "to": "Bill", "value": 64, "width": 1}, {"from": "Harry", "to": "Charlie", "value": 10, "width": 1}, {"from": "Harry", "to": "Malfoy", "value": 1011, "width": 1}, {"from": "Harry", "to": "Luna", "value": 215, "width": 1}, {"from": "Harry", "to": "Neville", "value": 227, "width": 1}, {"from": "Harry", "to": "Lily", "value": 9, "width": 1}, {"from": "Harry", "to": "Marietta", "value": 15, "width": 1}, {"from": "Harry", "to": "Blaise", "value": 13, "width": 1}, {"from": "Harry", "to": "Goyle", "value": 47, "width": 1}, {"from": "Harry", "to": "Pansy", "value": 15, "width": 1}, {"from": "Harry", "to": "Crabbe", "value": 6, "width": 1}, {"from": "Harry", "to": "Seamus", "value": 44, "width": 1}, {"from": "Harry", "to": "Firenze", "value": 32, "width": 1}, {"from": "Harry", "to": "Ernie", "value": 48, "width": 1}, {"from": "Harry", "to": "Nott", "value": 2, "width": 1}, {"from": "Harry", "to": "Fawkes", "value": 20, "width": 1}, {"from": "Harry", "to": "Morfin", "value": 63, "width": 1}, {"from": "Harry", "to": "Peverell", "value": 4, "width": 1}, {"from": "Harry", "to": "Merope", "value": 27, "width": 1}, {"from": "Harry", "to": "Marvolo", "value": 51, "width": 1}, {"from": "Harry", "to": "Hannah", "value": 4, "width": 1}, {"from": "Harry", "to": "Parvati", "value": 31, "width": 1}, {"from": "Harry", "to": "Fang", "value": 57, "width": 1}, {"from": "Harry", "to": "Aragog", "value": 50, "width": 1}, {"from": "Harry", "to": "Dean", "value": 129, "width": 1}, {"from": "Harry", "to": "Mundungus", "value": 12, "width": 1}, {"from": "Harry", "to": "Katie", "value": 80, "width": 1}, {"from": "Harry", "to": "Madam", "value": 9, "width": 1}, {"from": "Harry", "to": "Cho", "value": 10, "width": 1}, {"from": "Harry", "to": "Zacharias", "value": 23, "width": 1}, {"from": "Harry", "to": "Romilda", "value": 14, "width": 1}, {"from": "Harry", "to": "Peeves", "value": 36, "width": 1}, {"from": "Harry", "to": "Argus", "value": 3, "width": 1}, {"from": "Harry", "to": "Stan", "value": 20, "width": 1}, {"from": "Harry", "to": "James", "value": 23, "width": 1}, {"from": "Harry", "to": "Percy", "value": 45, "width": 1}, {"from": "Harry", "to": "Barty", "value": 9, "width": 1}, {"from": "Harry", "to": "Fenrir", "value": 34, "width": 1}, {"from": "Harry", "to": "Cornelius", "value": 9, "width": 1}, {"from": "Harry", "to": "Lavender", "value": 20, "width": 1}, {"from": "Harry", "to": "Dobby", "value": 74, "width": 1}, {"from": "Harry", "to": "Hokey", "value": 13, "width": 1}, {"from": "Harry", "to": "Myrtle", "value": 24, "width": 1}, {"from": "Harry", "to": "Bloody", "value": 22, "width": 1}, {"from": "Harry", "to": "Nagini", "value": 5, "width": 1}, {"from": "Harry", "to": "Amycus", "value": 17, "width": 1}, {"from": "Harry", "to": "Alecto", "value": 6, "width": 1}, {"from": "Harry", "to": "Grawp", "value": 11, "width": 1}, {"from": "Hedwig", "to": "Hermione", "value": 6, "width": 1}, {"from": "Hedwig", "to": "Ron", "value": 6, "width": 1}, {"from": "Petunia", "to": "Dudley", "value": 11, "width": 1}, {"from": "Dudley", "to": "Kreacher", "value": 6, "width": 1}, {"from": "Sirius", "to": "Voldemort", "value": 6, "width": 1}, {"from": "Sirius", "to": "Ron", "value": 10, "width": 1}, {"from": "Sirius", "to": "Hermione", "value": 7, "width": 1}, {"from": "Sirius", "to": "Bill", "value": 6, "width": 1}, {"from": "Sirius", "to": "Madam", "value": 6, "width": 1}, {"from": "Sirius", "to": "Cho", "value": 4, "width": 1}, {"from": "Kreacher", "to": "Ron", "value": 11, "width": 1}, {"from": "Kreacher", "to": "Dobby", "value": 79, "width": 1}, {"from": "Kreacher", "to": "Malfoy", "value": 17, "width": 1}, {"from": "Buckbeak", "to": "Hagrid", "value": 17, "width": 1}, {"from": "Buckbeak", "to": "Ron", "value": 10, "width": 1}, {"from": "Hagrid", "to": "Molly", "value": 5, "width": 1}, {"from": "Hagrid", "to": "Ginny", "value": 3, "width": 1}, {"from": "Hagrid", "to": "Ron", "value": 115, "width": 1}, {"from": "Hagrid", "to": "Madam", "value": 9, "width": 1}, {"from": "Hagrid", "to": "Malfoy", "value": 11, "width": 1}, {"from": "Hagrid", "to": "Hermione", "value": 62, "width": 1}, {"from": "Hagrid", "to": "Fleur", "value": 4, "width": 1}, {"from": "Hagrid", "to": "Voldemort", "value": 6, "width": 1}, {"from": "Hagrid", "to": "Neville", "value": 2, "width": 1}, {"from": "Hagrid", "to": "Fang", "value": 16, "width": 1}, {"from": "Hagrid", "to": "Aragog", "value": 70, "width": 1}, {"from": "Hagrid", "to": "Katie", "value": 13, "width": 1}, {"from": "Hagrid", "to": "Remus", "value": 4, "width": 1}, {"from": "Hagrid", "to": "Bill", "value": 1, "width": 1}, {"from": "Hagrid", "to": "Percy", "value": 6, "width": 1}, {"from": "Hagrid", "to": "Grawp", "value": 12, "width": 1}, {"from": "Voldemort", "to": "Hermione", "value": 29, "width": 1}, {"from": "Voldemort", "to": "Ron", "value": 38, "width": 1}, {"from": "Voldemort", "to": "Fleur", "value": 7, "width": 1}, {"from": "Voldemort", "to": "Neville", "value": 16, "width": 1}, {"from": "Voldemort", "to": "Merope", "value": 9, "width": 1}, {"from": "Voldemort", "to": "Morfin", "value": 36, "width": 1}, {"from": "Voldemort", "to": "Ginny", "value": 14, "width": 1}, {"from": "Voldemort", "to": "Firenze", "value": 4, "width": 1}, {"from": "Voldemort", "to": "Hokey", "value": 26, "width": 1}, {"from": "Voldemort", "to": "Malfoy", "value": 10, "width": 1}, {"from": "Voldemort", "to": "Horace", "value": 10, "width": 1}, {"from": "Voldemort", "to": "Arthur", "value": 7, "width": 1}, {"from": "Voldemort", "to": "Lily", "value": 5, "width": 1}, {"from": "Voldemort", "to": "Grawp", "value": 3, "width": 1}, {"from": "Ron", "to": "Arthur", "value": 8, "width": 1}, {"from": "Ron", "to": "Ginny", "value": 336, "width": 1}, {"from": "Ron", "to": "Hermione", "value": 726, "width": 1}, {"from": "Ron", "to": "Bill", "value": 58, "width": 1}, {"from": "Ron", "to": "Fleur", "value": 44, "width": 1}, {"from": "Ron", "to": "Fred", "value": 132, "width": 1}, {"from": "Ron", "to": "Charlie", "value": 17, "width": 1}, {"from": "Ron", "to": "Malfoy", "value": 215, "width": 1}, {"from": "Ron", "to": "Neville", "value": 41, "width": 1}, {"from": "Ron", "to": "Goyle", "value": 20, "width": 1}, {"from": "Ron", "to": "Dean", "value": 66, "width": 1}, {"from": "Ron", "to": "Ernie", "value": 34, "width": 1}, {"from": "Ron", "to": "Nott", "value": 3, "width": 1}, {"from": "Ron", "to": "Parvati", "value": 42, "width": 1}, {"from": "Ron", "to": "Fang", "value": 9, "width": 1}, {"from": "Ron", "to": "Aragog", "value": 19, "width": 1}, {"from": "Ron", "to": "Seamus", "value": 11, "width": 1}, {"from": "Ron", "to": "Mundungus", "value": 3, "width": 1}, {"from": "Ron", "to": "Katie", "value": 92, "width": 1}, {"from": "Ron", "to": "Cho", "value": 12, "width": 1}, {"from": "Ron", "to": "Lavender", "value": 35, "width": 1}, {"from": "Ron", "to": "Cormac", "value": 6, "width": 1}, {"from": "Ron", "to": "Percy", "value": 12, "width": 1}, {"from": "Ron", "to": "Romilda", "value": 4, "width": 1}, {"from": "Ron", "to": "Luna", "value": 32, "width": 1}, {"from": "Ron", "to": "Peeves", "value": 12, "width": 1}, {"from": "Ron", "to": "Dobby", "value": 12, "width": 1}, {"from": "Ron", "to": "Myrtle", "value": 30, "width": 1}, {"from": "Ron", "to": "Amycus", "value": 6, "width": 1}, {"from": "Ron", "to": "Grawp", "value": 5, "width": 1}, {"from": "Arthur", "to": "Molly", "value": 6, "width": 1}, {"from": "Arthur", "to": "Fleur", "value": 6, "width": 1}, {"from": "Arthur", "to": "Bill", "value": 6, "width": 1}, {"from": "Fred", "to": "Fleur", "value": 5, "width": 1}, {"from": "Fred", "to": "Ginny", "value": 56, "width": 1}, {"from": "Fred", "to": "Dean", "value": 4, "width": 1}, {"from": "Fred", "to": "Hermione", "value": 4, "width": 1}, {"from": "Fred", "to": "Malfoy", "value": 3, "width": 1}, {"from": "Fred", "to": "Percy", "value": 10, "width": 1}, {"from": "Hermione", "to": "Ginny", "value": 54, "width": 1}, {"from": "Hermione", "to": "Fleur", "value": 12, "width": 1}, {"from": "Hermione", "to": "Malfoy", "value": 82, "width": 1}, {"from": "Hermione", "to": "Goyle", "value": 14, "width": 1}, {"from": "Hermione", "to": "Hannah", "value": 4, "width": 1}, {"from": "Hermione", "to": "Katie", "value": 20, "width": 1}, {"from": "Hermione", "to": "Neville", "value": 10, "width": 1}, {"from": "Hermione", "to": "Dean", "value": 22, "width": 1}, {"from": "Hermione", "to": "Seamus", "value": 6, "width": 1}, {"from": "Hermione", "to": "Parvati", "value": 10, "width": 1}, {"from": "Hermione", "to": "Fenrir", "value": 12, "width": 1}, {"from": "Hermione", "to": "Ernie", "value": 6, "width": 1}, {"from": "Hermione", "to": "Blaise", "value": 4, "width": 1}, {"from": "Hermione", "to": "Peeves", "value": 2, "width": 1}, {"from": "Hermione", "to": "Luna", "value": 22, "width": 1}, {"from": "Hermione", "to": "Lavender", "value": 5, "width": 1}, {"from": "Hermione", "to": "Dobby", "value": 6, "width": 1}, {"from": "Hermione", "to": "Aragog", "value": 14, "width": 1}, {"from": "Hermione", "to": "Bill", "value": 6, "width": 1}, {"from": "Ginny", "to": "Bill", "value": 25, "width": 1}, {"from": "Ginny", "to": "Fleur", "value": 36, "width": 1}, {"from": "Ginny", "to": "Dean", "value": 64, "width": 1}, {"from": "Ginny", "to": "Gabrielle", "value": 10, "width": 1}, {"from": "Ginny", "to": "Blaise", "value": 9, "width": 1}, {"from": "Ginny", "to": "Neville", "value": 47, "width": 1}, {"from": "Ginny", "to": "Malfoy", "value": 35, "width": 1}, {"from": "Ginny", "to": "Zacharias", "value": 10, "width": 1}, {"from": "Ginny", "to": "Luna", "value": 6, "width": 1}, {"from": "Ginny", "to": "Katie", "value": 10, "width": 1}, {"from": "Gabrielle", "to": "Fleur", "value": 4, "width": 1}, {"from": "Fleur", "to": "Bill", "value": 131, "width": 1}, {"from": "Fleur", "to": "Percy", "value": 4, "width": 1}, {"from": "Fleur", "to": "Remus", "value": 4, "width": 1}, {"from": "Bill", "to": "Charlie", "value": 5, "width": 1}, {"from": "Bill", "to": "Nymphadora", "value": 6, "width": 1}, {"from": "Bill", "to": "Neville", "value": 6, "width": 1}, {"from": "Bill", "to": "Malfoy", "value": 3, "width": 1}, {"from": "Malfoy", "to": "Goyle", "value": 114, "width": 1}, {"from": "Malfoy", "to": "Pansy", "value": 59, "width": 1}, {"from": "Malfoy", "to": "Crabbe", "value": 6, "width": 1}, {"from": "Malfoy", "to": "Blaise", "value": 5, "width": 1}, {"from": "Malfoy", "to": "Nott", "value": 2, "width": 1}, {"from": "Malfoy", "to": "Katie", "value": 12, "width": 1}, {"from": "Malfoy", "to": "Dobby", "value": 22, "width": 1}, {"from": "Malfoy", "to": "Marietta", "value": 4, "width": 1}, {"from": "Malfoy", "to": "Ernie", "value": 21, "width": 1}, {"from": "Malfoy", "to": "Neville", "value": 9, "width": 1}, {"from": "Dean", "to": "Neville", "value": 18, "width": 1}, {"from": "Dean", "to": "Seamus", "value": 59, "width": 1}, {"from": "Dean", "to": "Katie", "value": 5, "width": 1}, {"from": "Luna", "to": "Neville", "value": 34, "width": 1}, {"from": "Luna", "to": "Trevor", "value": 6, "width": 1}, {"from": "Luna", "to": "Firenze", "value": 6, "width": 1}, {"from": "Neville", "to": "Trevor", "value": 12, "width": 1}, {"from": "Neville", "to": "Augusta", "value": 6, "width": 1}, {"from": "Neville", "to": "Parvati", "value": 5, "width": 1}, {"from": "Neville", "to": "Seamus", "value": 6, "width": 1}, {"from": "Neville", "to": "Alecto", "value": 4, "width": 1}, {"from": "Lily", "to": "James", "value": 6, "width": 1}, {"from": "Blaise", "to": "Pansy", "value": 6, "width": 1}, {"from": "Goyle", "to": "Percy", "value": 5, "width": 1}, {"from": "Parvati", "to": "Firenze", "value": 6, "width": 1}, {"from": "Parvati", "to": "Lavender", "value": 12, "width": 1}, {"from": "Parvati", "to": "Katie", "value": 10, "width": 1}, {"from": "Parvati", "to": "Cormac", "value": 4, "width": 1}, {"from": "Morfin", "to": "Merope", "value": 30, "width": 1}, {"from": "Morfin", "to": "Marvolo", "value": 28, "width": 1}, {"from": "Morfin", "to": "Hokey", "value": 6, "width": 1}, {"from": "Merope", "to": "Marvolo", "value": 15, "width": 1}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {
+    "configure": {
+        "enabled": true,
+        "filter": "physics"
+    },
+    "edges": {
+        "color": {
+            "inherit": true
+        },
+        "smooth": {
+            "enabled": true,
+            "type": "dynamic"
+        }
+    },
+    "interaction": {
+        "dragNodes": true,
+        "hideEdgesOnDrag": false,
+        "hideNodesOnDrag": false
+    },
+    "physics": {
+        "enabled": true,
+        "forceAtlas2Based": {
+            "avoidOverlap": 0,
+            "centralGravity": 0.01,
+            "damping": 0.4,
+            "gravitationalConstant": -50,
+            "springConstant": 0.08,
+            "springLength": 50
+        },
+        "solver": "forceAtlas2Based",
+        "stabilization": {
+            "enabled": true,
+            "fit": true,
+            "iterations": 1000,
+            "onlyDynamicEdges": false,
+            "updateInterval": 50
+        }
+    }
+};
+
+                  
+
+
+                  
+                  // if this network requires displaying the configure window,
+                  // put it in its div
+                  options.configure["container"] = document.getElementById("config");
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
